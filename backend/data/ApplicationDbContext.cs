@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using backend.models;
+using backend.controllers;
 
 namespace backend.data
 {
