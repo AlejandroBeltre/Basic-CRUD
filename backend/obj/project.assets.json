@@ -4302,11 +4302,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\aleja\\Desktop\\Code\\webFullStackTest\\backend\\backend.csproj",
+      "projectUniqueName": "c:\\Users\\aleja\\Desktop\\Code\\webFullStackTest\\backend\\backend.csproj",
       "projectName": "backend",
-      "projectPath": "C:\\Users\\aleja\\Desktop\\Code\\webFullStackTest\\backend\\backend.csproj",
+      "projectPath": "c:\\Users\\aleja\\Desktop\\Code\\webFullStackTest\\backend\\backend.csproj",
       "packagesPath": "C:\\Users\\aleja\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\aleja\\Desktop\\Code\\webFullStackTest\\backend\\obj\\",
+      "outputPath": "c:\\Users\\aleja\\Desktop\\Code\\webFullStackTest\\backend\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\aleja\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -4329,6 +4329,11 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {

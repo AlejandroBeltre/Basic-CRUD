@@ -14,23 +14,26 @@ namespace backend.controllers
         private readonly ApplicationDbContext _context;
 
         public ProductsController(ApplicationDbContext context)
-    {
-        _context = context;
-    }
+        {
+            _context = context;
+        }
 
-    [HttpGet]
-    public async Task<IActionResult> GetProducts()
-    {
-        var products = await _context.Products.ToListAsync();
-        return Ok(products);
+        [HttpGet]
+        public async Task<IActionResult> GetProducts()
+        {
+            var products = await _context.Products.ToListAsync(); // Ensure await is used
+            if (products == null || !products.Any())
+            {
+                return NotFound("No products found.");
+            }
+            return Ok(products);
+        }
+        [HttpPost]
+        public async Task<IActionResult> PostProduct([FromBody] Product product)
+        {
+            _context.Products.Add(product);
+            await _context.SaveChangesAsync();
+            return CreatedAtAction("GetProduct", new { id = product.ProductId }, product);
+        }
     }
-
-    [HttpPost]
-    public async Task<IActionResult> PostProduct([FromBody] Product product)
-    {
-        _context.Products.Add(product);
-        await _context.SaveChangesAsync();
-        return CreatedAtAction("GetProduct", new { id = product.ProductId }, product);
-    }
-}
 }
