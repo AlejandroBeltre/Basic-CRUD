@@ -1,7 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using backend.data;
 using backend.models;
+using backend.interfaces;
+using backend.classes;
+using backend.controllers;
+using backend.Migrations;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Identity;
 
 namespace backend;
 
@@ -15,12 +20,7 @@ public class Program
         builder.Services.AddAuthorization();
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-        builder.Services.AddControllers()
-        .AddJsonOptions(options =>
-        {
-            options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-            options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-        });
+        builder.Services.AddControllers();
 
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -28,15 +28,15 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
+        builder.Services.AddScoped<IProduct, ProductLogic>();
+        builder.Services.AddScoped<IUser, UserLogic>();
+
         var app = builder.Build();
 
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-            });
+            app.UseSwaggerUI();
         }
         app.UseRouting();
         app.UseHttpsRedirection();
