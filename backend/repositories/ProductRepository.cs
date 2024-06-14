@@ -7,7 +7,7 @@ using backend.models;
 
 namespace backend.repositories
 {
-    public class ProductRepository : IProductRepository
+    public class ProductRepository : IProduct
     {
         private readonly ApplicationDbContext _context;
 

@@ -27,6 +27,8 @@ public class Program
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+        builder.Services.AddScoped<IProduct, ProductRepository>();
+        builder.Services.AddScoped<IUser, UserRepository>();
 
         var app = builder.Build();
 

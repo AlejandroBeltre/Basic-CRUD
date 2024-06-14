@@ -4,7 +4,7 @@ using backend.models;
 
 namespace backend.interfaces
 {
-    public interface IUserRepository
+    public interface IUser
     {
         Task<IEnumerable<User>> GetAllUsersAsync();
         Task<User> GetUserByIdAsync(int id);

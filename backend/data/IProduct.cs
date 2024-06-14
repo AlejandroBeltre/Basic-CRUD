@@ -6,7 +6,7 @@ using backend.models;
 
 namespace backend.interfaces
 {
-    public interface IProductRepository
+    public interface IProduct
     {
         Task<IEnumerable<Product>> GetAllProductsAsync();
         Task<Product> GetProductByIdAsync(int id);
