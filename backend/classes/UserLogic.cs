@@ -6,6 +6,9 @@ using backend.interfaces;
 using backend.models;
 using backend.data;
 using backend.DTO;
+using BCrypt.Net;
+using Microsoft.EntityFrameworkCore;
+
 namespace backend.classes
 {
     public class UserLogic : IUser
@@ -29,14 +32,34 @@ namespace backend.classes
             }).ToList();
         }
 
-        public bool LoginUser(DataUser user)
+        public DataUser GetUserById(int id)
         {
-            throw new NotImplementedException();
+            var user = context.Users.FirstOrDefault(u => u.UserId == id);
+            return user;
         }
 
-        public bool RegisterUser(DataUser user)
+        public async Task<DataUser> Login(string username, string password)
         {
-            throw new NotImplementedException();
+            var user = await context.Users.FirstOrDefaultAsync(x => x.Username == username);
+            if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+                return null;
+
+            return user;
+        }
+
+        public async Task<DataUser> Register(DataUser user, string password)
+        {
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(password);
+
+            await context.Users.AddAsync(user);
+            await context.SaveChangesAsync();
+
+            return user;
+        }
+
+        public async Task<bool> UserExists(string username)
+        {
+            return await context.Users.AnyAsync(x => x.Username == username);
         }
     }
 }

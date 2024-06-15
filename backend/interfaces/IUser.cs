@@ -11,7 +11,10 @@ namespace backend.interfaces
     public interface IUser
     {
         List<DataUser> GetAllUsers();
-        bool RegisterUser(DataUser user);
-        bool LoginUser(DataUser user);
+        DataUser GetUserById(int id);
+        Task<DataUser> Register(DataUser user, string password);
+        Task<DataUser> Login(string username, string password);
+        Task<bool> UserExists(string username);
+
     }
 }

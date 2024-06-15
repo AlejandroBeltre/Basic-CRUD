@@ -17,4 +17,24 @@ namespace backend.DTO
         public string Role { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
+    public class UserForRegisterDto
+    {
+        [Required]
+        public string Username { get; set; }
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
+        [Required]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
+        public string Role { get; set; }
+    }
+    public class UserForLoginDto
+    {
+        [Required]
+        public string Username { get; set; }
+        [Required]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
+    }
 }
