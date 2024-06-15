@@ -4,33 +4,28 @@ using backend.data;
 using backend.models;
 using System.Linq;
 using System.Threading.Tasks;
+using backend.classes;
+using backend.data;
+using backend.interfaces;
+using backend.DTO;
 
 namespace backend.controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class UserController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IUser _user;
 
-        public UsersController(ApplicationDbContext context)
+        public UserController(IUser user)
         {
-            _context = context;
+            _user = user;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetUsers()
-        {
-            var users = await _context.Users.ToListAsync();
-            return Ok(users);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> PostUser([FromBody] User user)
-        {
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction("GetUser", new { id = user.UserId }, user);
+        public IEnumerable<DataUser> GetAllUsers()
+        {   
+            return _user.GetAllUsers();
         }
     }
 }
