@@ -15,6 +15,6 @@ namespace backend.DTO
         public decimal Price { get; set; }
         public int Stock { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
-        public DateTime UpdatedAt { get; set; } = DateTime.Now;
+        public DateTime LastUpdatedAt { get; set; } = DateTime.Now;
     }
 }

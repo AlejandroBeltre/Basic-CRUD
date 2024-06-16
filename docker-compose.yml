@@ -1,0 +1,26 @@
+version: '3'
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "5000:8080"
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    user: root
+    hostname: db
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_PID=Developer
+      - SA_PASSWORD=admin13426-
+    ports:
+      - "1433:1433"
+    volumes:
+    - db-data:/var/opt/mssql/data
+    - ./database:/tmp/database
+    - /C/Program Files/Microsoft SQL Server/MSSQL16.MSSQLSERVER/MSSQL/DATA:/var/opt/mssql/data
+    - /C/Program Files/Microsoft SQL Server/MSSQL16.MSSQLSERVER/MSSQL/Log:/var/opt/mssql/log
+
+volumes:
+  db-data:

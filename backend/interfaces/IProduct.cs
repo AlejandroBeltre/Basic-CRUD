@@ -2,17 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using backend.classes;
 using backend.models;
+using backend.DTO;
+using backend.classes;
 
 namespace backend.interfaces
 {
     public interface IProduct
     {
-        List<Product> GetAllProducts();
-        Product GetProductById(int id);
-        void AddProduct(Product product);
-        void UpdateProduct(Product product);
-        void DeleteProduct(int id);
+        List<DataProduct> GetAllProducts();
+        DataProduct GetProductById(int ProductId);
+        void AddProduct(DataProduct product);
+        void UpdateProduct(DataProduct product);
+        void DeleteProduct(int ProductId);
     }
 }

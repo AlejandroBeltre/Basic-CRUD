@@ -18,7 +18,7 @@ using backend.endpoints;
 using System.Text.Json;
 
 namespace backend.controllers
-{
+{   
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -60,25 +60,22 @@ namespace backend.controllers
                 return Unauthorized();
 
             // Create JSON payload to send to TokenEndpoint.Connect
-            var loginPayload = new
+            var claims = new[]
             {
-                grant_type = "password",
-                username = userForLoginDto.Username,
-                password = userForLoginDto.Password
+                new Claim(JwtRegisteredClaimNames.Sub, userFromRepo.Username),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SigningKey));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            // Convert the payload to a JSON string
-            var loginJson = JsonSerializer.Serialize(loginPayload);
+            var token = new JwtSecurityToken(
+                issuer: _jwtOptions.Issuer,
+                audience: _jwtOptions.Audience,
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(30),
+                signingCredentials: creds);
 
-            // Create a new HttpRequest and set the content
-            var request = HttpContext.Request;
-            request.ContentType = "application/json";
-            request.Body = new MemoryStream(Encoding.UTF8.GetBytes(loginJson));
-
-            // Call the TokenEndpoint.Connect method
-            var result = await TokenEndpoint.Connect(HttpContext, _jwtOptions);
-
-            return result;
+            return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
         }
 
 

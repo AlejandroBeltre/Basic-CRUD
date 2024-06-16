@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Microsoft.OpenApi.Models;
+using System.Text.Json;
 
 namespace backend;
 
@@ -25,7 +26,6 @@ public class Program
         builder.Services.AddAuthorization();
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-        builder.Services.AddControllers();
 
         var jwtOptions = builder.Configuration.GetSection("JwtOptions").Get<JwtOptions>();
         builder.Services.AddSingleton(jwtOptions);
@@ -54,10 +54,34 @@ public class Program
             options.UseSqlServer(connectionString));
 
         builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddControllers();
         builder.Services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
             c.OperationFilter<AddAuthHeaderOperationFilter>();
+            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                In = ParameterLocation.Header,
+                Description = "Please enter a valid token",
+                Name = "Authorization",
+                Type = SecuritySchemeType.Http,
+                BearerFormat = "JWT",
+                Scheme = "Bearer"
+            });
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    }
+                },
+                new string[] { }
+                }
+            });
         });
 
         builder.Services.AddScoped<IProduct, ProductLogic>();
@@ -65,6 +89,7 @@ public class Program
 
         var app = builder.Build();
 
+        
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
@@ -74,8 +99,8 @@ public class Program
 
         app.UseRouting();
         app.UseHttpsRedirection();
-        app.UseAuthorization();
         app.UseAuthentication();
+        app.UseAuthorization();
         app.MapControllers();
         app.Run();
     }
