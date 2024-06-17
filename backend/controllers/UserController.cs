@@ -43,7 +43,7 @@ namespace backend.controllers
                 Username = userForRegisterDto.Username,
                 Email = userForRegisterDto.Email,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(userForRegisterDto.Password),
-                Role = userForRegisterDto.Role
+                Role = "user"
             };
 
             var createdUser = await _user.Register(userToCreate, userForRegisterDto.Password);
