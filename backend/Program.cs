@@ -33,6 +33,7 @@ public class Program
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(opts =>
         {
+            var jwtOptions = builder.Configuration.GetSection("JwtOptions").Get<JwtOptions>();
             byte[] signingKeyBytes = Encoding.ASCII.GetBytes(jwtOptions.SigningKey);
 
             opts.TokenValidationParameters = new TokenValidationParameters
@@ -47,7 +48,10 @@ public class Program
             };
         });
 
-        builder.Services.AddAuthorization();
+        builder.Services.AddAuthorization(options =>
+        {
+            options.AddPolicy("AdminOnly", policy => policy.RequireRole("admin"));
+        });
 
         var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
         builder.Services.AddDbContext<ApplicationDbContext>(options =>

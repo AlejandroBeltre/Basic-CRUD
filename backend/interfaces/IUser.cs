@@ -15,6 +15,8 @@ namespace backend.interfaces
         Task<DataUser> Register(DataUser user, string password);
         Task<DataUser> Login(string username, string password);
         Task<bool> UserExists(string username);
+        Task UpdateUser(DataUser user);
+        Task DeleteUser(int id);
 
     }
 }

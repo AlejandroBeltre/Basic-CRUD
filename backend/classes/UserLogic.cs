@@ -61,5 +61,19 @@ namespace backend.classes
         {
             return await context.Users.AnyAsync(x => x.Username == username);
         }
+        public async Task UpdateUser(DataUser user)
+        {
+            context.Users.Update(user);
+            await context.SaveChangesAsync();
+        }
+        public async Task DeleteUser(int id)
+        {
+            var user = await context.Users.FindAsync(id);
+            if (user != null)
+            {
+                context.Users.Remove(user);
+                await context.SaveChangesAsync();
+            }
+        }
     }
 }

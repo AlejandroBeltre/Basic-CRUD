@@ -63,7 +63,8 @@ namespace backend.controllers
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, userFromRepo.Username),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Role, userFromRepo.Role) 
             };
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SigningKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -78,12 +79,13 @@ namespace backend.controllers
             return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
         }
 
-
+        [Authorize]
         [HttpGet]
         public IEnumerable<DataUser> GetAllUsers()
         {   
             return _user.GetAllUsers();
         }
+        [Authorize]
         [HttpGet("{id}")]
         public IActionResult GetUserById(int id)
         {
@@ -94,5 +96,37 @@ namespace backend.controllers
             }
             return Ok(user);
         }
+        [Authorize(Roles = "admin")]
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] UserForRegisterDto userDto)
+        {
+            var existingUser = _user.GetUserById(id);
+            if (existingUser == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            existingUser.Username = userDto.Username;
+            existingUser.Email = userDto.Email;
+            existingUser.PasswordHash = BCrypt.Net.BCrypt.HashPassword(userDto.Password);
+            existingUser.Role = userDto.Role;
+
+            await _user.UpdateUser(existingUser);
+            return NoContent();
+        }
+        [Authorize(Roles = "admin")]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            var existingUser = _user.GetUserById(id);
+            if (existingUser == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            await _user.DeleteUser(id);
+            return NoContent();
+        }
+
     }
 }

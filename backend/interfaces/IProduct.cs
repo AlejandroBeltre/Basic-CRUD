@@ -12,8 +12,10 @@ namespace backend.interfaces
     {
         List<DataProduct> GetAllProducts();
         DataProduct GetProductById(int ProductId);
-        void AddProduct(DataProduct product);
-        void UpdateProduct(DataProduct product);
-        void DeleteProduct(int ProductId);
+        Task AddProduct(DataProduct product);
+        Task UpdateProduct(DataProduct product);
+        Task DeleteProduct(int ProductId);
+        List<DataProduct> GetProductsWithPagination(int pageNumber, int pageSize);
+        List<DataProduct> SearchProducts(string searchTerm);
     }
 }
