@@ -14,7 +14,7 @@ Este proyecto es una aplicación web full-stack con un frontend en React y un ba
 
 ## Introducción
 
-Este proyecto fue creado con [Create React App](https://github.com/facebook/create-react-app) para el frontend y .NET para el backend.
+Este proyecto fue creado con [Create React App](https://github.com/facebook/create-react-app) para el frontend y .NET Web API para el backend.
 
 ## Requisitos Previos
 
