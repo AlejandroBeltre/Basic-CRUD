@@ -47,3 +47,4 @@ cd backend
 dotnet restore
 ```
 
+4. **Crear la base de datos:**
