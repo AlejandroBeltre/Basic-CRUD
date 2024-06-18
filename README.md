@@ -50,4 +50,4 @@ dotnet restore
 
 4. **Crear la base de datos:**
 
-Ejecuta el script 'WebAppDB.sql' ubicado en la carpeta [Database](database)
+- Ejecuta el script ['WebAppDB.sql'](database/WebAppDB.sql) ubicado en la carpeta [Database](database)
