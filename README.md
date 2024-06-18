@@ -21,6 +21,7 @@ Este proyecto fue creado con [Create React App](https://github.com/facebook/crea
 - Node.js
 - npm
 - .NET SDK
+- SQL Server
 
 ## Instalación
 1. **Clonar el repositorio:**
@@ -48,3 +49,5 @@ dotnet restore
 ```
 
 4. **Crear la base de datos:**
+
+Ejecuta el script 'WebAppDB.sql' ubicado en la carpeta [Database](database)
