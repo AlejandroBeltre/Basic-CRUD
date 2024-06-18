@@ -16,7 +16,7 @@ Este proyecto fue creado con [Create React App](https://github.com/facebook/crea
 - [Node.js](https://nodejs.org/)
 - [npm](https://www.npmjs.com/)
 - [.NET SDK](https://dotnet.microsoft.com/download)
-- [SQL Server](https://learn.microsoft.com/en-us/sql/sql-server/what-is-sql-server?view=sql-server-ver16)
+- [SQL Server](https://www.microsoft.com/es-es/sql-server/sql-server-downloads)
 
 ## Instalación
 1. **Clonar el repositorio:**
