@@ -6,8 +6,6 @@ Este proyecto es una aplicación web full-stack con un frontend en React y un ba
 - [Requisitos Previos](#requisitos-previos)
 - [Instalación](#instalación)
 - [Ejecutar la Aplicación](#ejecutar-la-aplicación)
-- [Construir la Aplicación](#construir-la-aplicación)
-- [Más Información](#más-información)
 
 ## Introducción
 
