@@ -23,3 +23,8 @@ Este proyecto fue creado con [Create React App](https://github.com/facebook/crea
 - .NET SDK
 
 ## Instalación
+1. **Clonar el repositorio:**
+
+```bash
+git clone https://github.com/AlejandroBeltre/testFullStackJunior.git
+```
