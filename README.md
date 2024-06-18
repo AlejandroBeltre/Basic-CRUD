@@ -27,4 +27,23 @@ Este proyecto fue creado con [Create React App](https://github.com/facebook/crea
 
 ```bash
 git clone https://github.com/AlejandroBeltre/testFullStackJunior.git
+
+cd testFullStackJunior
 ```
+
+2. **Instalar dependencias del frontend:**
+
+```bash
+cd frontend 
+
+npm install
+```
+
+3. **Instalar dependencias del backend:**
+
+```bash
+cd backend
+
+dotnet restore
+```
+
