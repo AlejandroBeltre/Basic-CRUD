@@ -16,7 +16,6 @@ Este proyecto fue creado con [Create React App](https://github.com/facebook/crea
 - [Node.js](https://nodejs.org/)
 - [npm](https://www.npmjs.com/)
 - [.NET SDK](https://dotnet.microsoft.com/download)
-- [Docker](https://www.docker.com/) (opcional, para la contenedorización)
 
 ## Instalación
 1. **Clonar el repositorio:**
