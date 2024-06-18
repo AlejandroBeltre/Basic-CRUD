@@ -1,0 +1,86 @@
+/* CreateUsers.css */
+
+
+body::-webkit-scrollbar {
+  display: none; /* Chronium */
+}
+
+.create-user-container {
+    max-width: 400px;
+    margin: 50px auto; /* Add margin to the top */
+    padding: 20px;
+    background-color: #1a1a1a;
+    color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .create-user-container h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .create-user-container p {
+    font-size: 14px;
+    margin-bottom: 20px;
+    color: #8b92a0;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 5px;
+  }
+  
+  .form-group input,
+  .form-group select {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #333;
+    border-radius: 4px;
+    background-color: #2a2a2a;
+    color: #fff;
+  }
+  
+  .form-group input::placeholder {
+    color: #666;
+  }
+  
+  button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #0056b3;
+  }
+  
+  .back-button {
+    display: block; /* Ensure the back button is a block element */
+    width: 100%; /* Set the width to 100% */
+    margin-top: 20px; /* Add margin to the top to separate from the submit button */
+    padding: 10px 20px;
+    font-size: 16px; /* Match the font size of the submit button */
+    border: none;
+    border-radius: 4px;
+    background-color: #555;
+    color: #fff;
+    text-align: center; /* Center the text */
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  .back-button:hover {
+    background-color: #333;
+  }

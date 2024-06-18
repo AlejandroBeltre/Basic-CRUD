@@ -1,0 +1,133 @@
+/* Reset and global styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body::-webkit-scrollbar {
+    display: none; /* Chronium */
+  }
+
+  body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #121212; 
+    color: #fff; 
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  
+  /* Header styles */
+  .header {
+    background-color: #111827;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    padding-left: 30px;
+  }
+  
+  .header h1 {
+    margin: 0;
+  }
+  
+  .header nav ul {
+    display: flex;
+    list-style: none;
+  }
+  
+  .header nav ul li {
+    margin-left: 1rem;
+  }
+  
+  .header nav ul li a {
+    color: #fff;
+    text-decoration: none;
+  }
+
+  .tables-headers {
+    margin-top: 20px;
+  }
+  
+  /* Main content styles */
+  main {
+    padding: 1rem;
+  }
+  
+  .search-container {
+    position: relative;
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+  
+  .search-container input[type="text"] {
+    width: 100%;
+    padding: 0.5rem 2rem 0.5rem 0.5rem; /* Add padding for the icon */
+    background-color: #121212; /* Set background color to match the page */
+    color: #fff; /* Set text color to white */
+    border: 1px solid #333; /* Add a border */
+    border-radius: 5px; /* Add rounded corners */
+  }
+  
+  .search-container .search-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #fff; /* Set icon color to white */
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    padding: 0.5rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    height: auto;
+  }
+  
+  th {
+    background-color: transparent; /* Set background color to transparent */
+    color: #fff; /* Set text color to white */
+  }
+  
+  button {
+    margin-right: 0.5rem;
+  }
+  
+  .button-container {
+    display: flex;
+    gap: 10px; /* Adjust the gap between buttons as needed */
+  }
+  
+  .button-container button {
+    background-color: #1a1a1a; /* Dark background color */
+    color: white; /* White text color */
+    border: none; /* Remove default border */
+    padding: 10px 20px; /* Adjust padding for desired size */
+    font-size: 16px; /* Adjust font size */
+    cursor: pointer; /* Pointer cursor on hover */
+    border-radius: 5px; /* Rounded corners */
+    transition: background-color 0.3s; /* Smooth transition for background color */
+  }
+  
+  .button-container button:hover {
+    background-color: #333; /* Slightly lighter background on hover */
+  }
+
+  .notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+  }
