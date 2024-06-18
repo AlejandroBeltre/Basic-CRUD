@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import './signin.css';
+import { loginUser } from '../api';
 
 function SignIn() {
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     // Disable scrolling
@@ -16,17 +19,34 @@ function SignIn() {
     };
   }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle sign-in logic here
-    console.log('Username:', username);
-    console.log('Password:', password);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (!username || !password) {
+      console.error('Username and password are required');
+      return;
+    }
+    const user = { username, password };
+    try {
+      const response = await loginUser(user);
+      const token = response.data.token;
+      const role = response.data.role;
+      localStorage.setItem('jwtToken', token);
+      localStorage.setItem('userRole', role);
+      console.log('Login successful, token stored and role stored');
+      navigate('/');
+    } catch (error) {
+      console.error('Login failed', error);
+      // Check if the error response has a custom error message
+      const errorMessage = error.response?.data?.message || 'Invalid username or password';
+      setErrorMessage(errorMessage); // Set the error message
+    }
   };
 
   return (
     <div className="signin-container">
       <h1>Sign In</h1>
       <p>Enter your username and password to access your account</p>
+      {errorMessage && <a className="error-message">{errorMessage}</a>}
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="username">Username</label>

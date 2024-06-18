@@ -37,4 +37,10 @@ namespace backend.DTO
         [DataType(DataType.Password)]
         public string Password { get; set; }
     }
+    public class UserForUpdateDto
+    {
+        public string Username { get; set; }
+        public string Email { get; set; }
+        public string Role { get; set; }
+    }
 }

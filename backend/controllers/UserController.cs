@@ -52,32 +52,39 @@ namespace backend.controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
-        {
-            var userFromRepo = await _user.Login(userForLoginDto.Username.ToLower(), userForLoginDto.Password);
+public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
+{
+    var userFromRepo = await _user.Login(userForLoginDto.Username.ToLower(), userForLoginDto.Password);
 
-            if (userFromRepo == null)
-                return Unauthorized();
+    if (userFromRepo == null)
+    {
+        Console.WriteLine("Login failed: Invalid username or password");
+        return Unauthorized();
+    }
 
-            // Create JSON payload to send to TokenEndpoint.Connect
-            var claims = new[]
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, userFromRepo.Username),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.Role, userFromRepo.Role) 
-            };
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SigningKey));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+    var claims = new[]
+    {
+        new Claim(JwtRegisteredClaimNames.Sub, userFromRepo.Username),
+        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+        new Claim(ClaimTypes.Role, userFromRepo.Role) 
+    };
+    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SigningKey));
+    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var token = new JwtSecurityToken(
-                issuer: _jwtOptions.Issuer,
-                audience: _jwtOptions.Audience,
-                claims: claims,
-                expires: DateTime.Now.AddMinutes(30),
-                signingCredentials: creds);
+    var token = new JwtSecurityToken(
+        issuer: _jwtOptions.Issuer,
+        audience: _jwtOptions.Audience,
+        claims: claims,
+        expires: DateTime.Now.AddMinutes(30),
+        signingCredentials: creds);
 
-            return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
-        }
+    Console.WriteLine("Login successful: Token generated");
+    return Ok(new 
+    { 
+        token = new JwtSecurityTokenHandler().WriteToken(token),
+        role = userFromRepo.Role
+    });
+}
 
         [Authorize]
         [HttpGet]
@@ -98,7 +105,7 @@ namespace backend.controllers
         }
         [Authorize(Roles = "admin")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(int id, [FromBody] UserForRegisterDto userDto)
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] UserForUpdateDto userDto)
         {
             var existingUser = _user.GetUserById(id);
             if (existingUser == null)
@@ -108,7 +115,6 @@ namespace backend.controllers
 
             existingUser.Username = userDto.Username;
             existingUser.Email = userDto.Email;
-            existingUser.PasswordHash = BCrypt.Net.BCrypt.HashPassword(userDto.Password);
             existingUser.Role = userDto.Role;
 
             await _user.UpdateUser(existingUser);

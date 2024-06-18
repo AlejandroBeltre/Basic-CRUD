@@ -82,10 +82,12 @@
   table {
     width: 100%;
     border-collapse: collapse;
+    table-layout: auto;
+    height: 100%;
   }
   
   th, td {
-    padding: 0.5rem;
+    padding: 5px;
     text-align: left;
     border-bottom: 1px solid #ddd;
     height: auto;
@@ -131,3 +133,35 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     z-index: 1000;
   }
+
+  .button-container-tables {
+    display: flex;
+    gap: 10px;
+    height: 100%;
+  }
+
+  .button-container-tables button {
+    background-color: #1a1a1a; /* Dark background color */
+    color: white; /* White text color */
+    border: none; /* Remove default border */
+    padding: 10px 20px; /* Adjust padding for desired size */
+    font-size: 16px; /* Adjust font size */
+    cursor: pointer; /* Pointer cursor on hover */
+    border-radius: 5px; /* Rounded corners */
+    transition: background-color 0.3s; /* Smooth transition for background color */
+  }
+  /* Add this to your existing CSS file */
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+}
+
+.fade-out {
+  animation: fadeOut 0.5s forwards;
+}

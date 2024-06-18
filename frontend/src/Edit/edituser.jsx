@@ -1,29 +1,44 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { getUserById, updateUser } from '../api';
 import '../Create/createuser.css';
 
-function EditUser({ users, updateUser }) {
+function EditUser() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const user = users ? users.find((u) => u.id === parseInt(id)) : null;
+  const [user, setUser] = useState(null);
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [role, setRole] = useState('user');
 
-  const [username, setUsername] = useState(user ? user.name : '');
-  const [email, setEmail] = useState(user ? user.email : '');
-  const [role, setRole] = useState(user ? user.role : 'user');
+  useEffect(() => {
+    getUserById(id)
+      .then(response => {
+        const userData = response.data;
+        setUser(userData);
+        setUsername(userData.username);
+        setEmail(userData.email);
+        setRole(userData.role);
+      })
+      .catch(error => console.error("Error fetching user by ID:", error));
+  }, [id]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (user) {
-      updateUser({
-        id: user.id,
-        name: username,
+      const updatedUser = {
+        username: username,
         email: email,
-        role: role
-      });
-      navigate('/');
+        role: role,
+      };
+      updateUser(user.userId, updatedUser)
+        .then(() => {
+          navigate('/');
+        })
+        .catch(error => console.error("Error updating user:", error));
     }
   };
 

@@ -1,71 +1,43 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../App.css';
 import './homepage.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { getProducts, getProductById, deleteProduct, getUsers, getUserById, deleteUser } from '../api';
 
 function HomePage() {
-  const [products, setProducts] = useState([
-    {
-        id: 1,
-        name: "Acme Wireless Headphones",
-        description: "High-quality wireless headphones with noise cancellation",
-        price: 99.99,
-        stock: 50,
-      },
-      {
-        id: 2,
-        name: "Acme Smart Lamp",
-        description: "Adjustable smart lamp with voice control",
-        price: 49.99,
-        stock: 25,
-      },
-      {
-        id: 3,
-        name: "Acme Fitness Tracker",
-        description: "Sleek and durable fitness tracker with heart rate monitoring",
-        price: 79.99,
-        stock: 30,
-      },
-      {
-        id: 4,
-        name: "Acme Portable Charger",
-        description: "High-capacity portable charger with fast charging",
-        price: 29.99,
-        stock: 75,
-      },
-  ]);
-  const [users, setUsers] = useState([
-    {
-        id: 1,
-        name: "JohnDoe",
-        email: "john.doe@example.com",
-        role: "Admin",
-      },
-      {
-        id: 2,
-        name: "JaneSmith",
-        email: "jane.smith@example.com",
-        role: "User",
-      },
-      {
-        id: 3,
-        name: "AliceJohnson",
-        email: "alice.johnson@example.com",
-        role: "User",
-      },
-      {
-        id: 4,
-        name: "BobBrown",
-        email: "bob.brown@example.com",
-        role: "Moderator",
-      },
-  ]);
+  const [products, setProducts] = useState([]);
+  const [users, setUsers] = useState([]);
   const [productSearchTerm, setProductSearchTerm] = useState("");
   const [userSearchTerm, setUserSearchTerm] = useState("");
   const [notification, setNotification] = useState("");
+  const [userRole, setUserRole] = useState('');
   const navigate = useNavigate();
+  const userRefs = useRef({});
+
+  useEffect(() => {
+    // Get the user's role from localStorage
+    const role = localStorage.getItem('userRole');
+    setUserRole(role);
+
+    getProducts()
+      .then(response => {
+        console.log("Products fetched:", response.data);
+        setProducts(response.data);
+      })
+      .catch(error => console.error("Error fetching products:", error));
+
+    // Fetch users data only if the user's role is 'admin'
+    if (role && role.toLowerCase() === 'admin') {
+      getUsers()
+        .then(response => {
+          console.log("Users fetched:", response.data);
+          setUsers(response.data);
+        })
+        .catch(error => console.error("Error fetching users:", error));
+    }
+  }, []);
 
   const handleProductSearch = (e) => {
     setProductSearchTerm(e.target.value);
@@ -76,31 +48,47 @@ function HomePage() {
   };
 
   const filteredProducts = products.filter((product) =>
-    product.name.toLowerCase().includes(productSearchTerm.toLowerCase())
+    product.name && product.name.toLowerCase().includes(productSearchTerm.toLowerCase())
   );
 
   const handleEditProduct = (id) => {
-    navigate(`/editproduct/${id}`);
+    getProductById(id)
+      .then(response => {
+        navigate(`/editproduct/${id}`, { state: { product: response.data } });
+      })
+      .catch(error => console.error("Error fetching product by ID:", error));
   };
 
   const handleDeleteProduct = (id) => {
-    setProducts(products.filter(product => product.id !== id));
-    setNotification("Product has been deleted.");
-    setTimeout(() => setNotification(""), 3000); // Clear notification after 3 seconds
+    deleteProduct(id)
+      .then(() => {
+        setProducts((prevProducts) => prevProducts.filter(product => product.productId !== id));
+        setNotification("Product has been deleted.");
+        setTimeout(() => setNotification(""), 1000);
+      })
+      .catch(error => console.error("Error deleting product:", error));
   };
 
   const filteredUsers = users.filter((user) =>
-    user.name.toLowerCase().includes(userSearchTerm.toLowerCase())
+    user.username && user.username.toLowerCase().includes(userSearchTerm.toLowerCase())
   );
 
   const handleEditUser = (id) => {
-    navigate(`/edituser/${id}`);
+    getUserById(id)
+      .then(response => {
+        navigate(`/edituser/${id}`, { state: { user: response.data } });
+      })
+      .catch(error => console.error("Error fetching user by ID:", error));
   };
 
   const handleDeleteUser = (id) => {
-    setUsers(users.filter(user => user.id !== id));
-    setNotification("User has been deleted.");
-    setTimeout(() => setNotification(""), 3000); // Clear notification after 3 seconds
+    deleteUser(id)
+      .then(() => {
+        setUsers((prevUsers) => prevUsers.filter(user => user.userId !== id));
+        setNotification("User has been deleted.");
+        setTimeout(() => setNotification(""), 1000);
+      })
+      .catch(error => console.error("Error deleting user:", error));
   };
 
   return (
@@ -110,24 +98,29 @@ function HomePage() {
         <nav>
           <ul>
             <div className='button-container'>
-                <li ><Link to="/createproduct"><button>Create Product</button></Link></li>
-                <li ><Link to="/createuser"><button>Create User</button></Link></li>
-                <li ><Link to="/signin"><button>Sign in</button></Link></li>
+              <li><a href="#product-management"><button>Product Management</button></a></li>
+              {userRole && userRole.toLowerCase() === 'admin' && (
+                <>
+                  <li><a href="#user-management"><button>User Management</button></a></li>
+                  <li><Link to="/createproduct"><button>Create Product</button></Link></li>
+                </>
+              )}
+              <li><Link to="/signin"><button>Sign in</button></Link></li>
             </div>
           </ul>
         </nav>
       </header>
       <main>
         {notification && <div className="notification">{notification}</div>}
-        <h2>Product Management</h2>
+        <h2 id="product-management">Product Management</h2>
         <div className="search-container">
-            <FontAwesomeIcon icon={faSearch} className="search-icon" />
-            <input 
-                type="text" 
-                placeholder="Search products..." 
-                value={productSearchTerm}
-                onChange={handleProductSearch}
-            />
+          <FontAwesomeIcon icon={faSearch} className="search-icon" />
+          <input
+            type="text"
+            placeholder="Search products..."
+            value={productSearchTerm}
+            onChange={handleProductSearch}
+          />
         </div>
         <table className="full-width-table">
           <thead>
@@ -142,51 +135,55 @@ function HomePage() {
           <tbody>
             {filteredProducts.map((product, index) => (
               <tr key={index}>
-                <td>{product.name}</td>   
+                <td>{product.name}</td>
                 <td>{product.description}</td>
                 <td>${product.price.toFixed(2)}</td>
                 <td>{product.stock}</td>
-                <td className='button-container'>
-                  <Link to={`/editproduct/${product.id}`}><button>Edit</button></Link>
-                  <button onClick={() => handleDeleteProduct(product.id)}>Delete</button>
+                <td className='button-container-tables'>
+                  <button onClick={() => handleEditProduct(product.productId)}>Edit</button>
+                  <button onClick={() => handleDeleteProduct(product.productId)}>Delete</button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-        <h2 className='tables-headers'>User Management</h2>
-        <div className="search-container">
-            <FontAwesomeIcon icon={faSearch} className="search-icon" />
-            <input 
-                type="text" 
-                placeholder="Search users..." 
+        {userRole && userRole.toLowerCase() === 'admin' && (
+          <>
+            <h2 id="user-management" className='tables-headers'>User Management</h2>
+            <div className="search-container">
+              <FontAwesomeIcon icon={faSearch} className="search-icon" />
+              <input
+                type="text"
+                placeholder="Search users..."
                 value={userSearchTerm}
                 onChange={handleUserSearch}
-            />
-        </div>
-        <table className="full-width-table">
-          <thead>
-            <tr>
-              <th>Username</th>
-              <th>Email</th>
-              <th>Role</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredUsers.map((user, index) => (
-              <tr key={index}>
-                <td>{user.name}</td>
-                <td>{user.email}</td>
-                <td>{user.role}</td>
-                <td className='button-container'>
-                  <Link to={`/edituser/${user.id}`}><button>Edit</button></Link>
-                  <button onClick={() => handleDeleteUser(user.id)}>Delete</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+              />
+            </div>
+            <table className="full-width-table">
+              <thead>
+                <tr>
+                  <th>Username</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredUsers.map((user, index) => (
+                  <tr key={index} ref={el => userRefs.current[user.id] = el}>
+                    <td>{user.username}</td>
+                    <td>{user.email}</td>
+                    <td>{user.role}</td>
+                    <td className='button-container-tables'>
+                      <button onClick={() => handleEditUser(user.userId)}>Edit</button>
+                      <button onClick={() => handleDeleteUser(user.userId)}>Delete</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </>
+        )}
       </main>
     </div>
   );

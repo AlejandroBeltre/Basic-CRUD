@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import './createproduct.css';
+import { createProduct } from '../api';
 
 function CreateProduct() {
   const [productName, setProductName] = useState('');
   const [productDescription, setProductDescription] = useState('');
   const [price, setPrice] = useState('');
   const [stock, setStock] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Disable scrolling when the component is mounted
@@ -22,13 +24,19 @@ function CreateProduct() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log({
-      productName,
-      productDescription,
-      price,
-      stock,
-    });
+    const newProduct = {
+      name: productName,
+      description: productDescription,
+      price: parseFloat(price),
+      stock: parseInt(stock, 10),
+    };
+
+    createProduct(newProduct)
+      .then(response => {
+        console.log('Product created:', response.data);
+        navigate('/'); // Redirect to homepage or another page
+      })
+      .catch(error => console.error('Error creating product:', error));
   };
 
   return (

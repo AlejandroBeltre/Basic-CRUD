@@ -1,19 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { getProductById, updateProduct } from '../api';
 import '../Create/createproduct.css';
 
-function EditProduct({ products, updateProduct }) {
+function EditProduct() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const product = products ? products.find((p) => p.id === parseInt(id)) : null;
+  const [product, setProduct] = useState(null);
+  const [productName, setProductName] = useState('');
+  const [productDescription, setProductDescription] = useState('');
+  const [price, setPrice] = useState('');
+  const [stock, setStock] = useState('');
 
-  const [productName, setProductName] = useState(product ? product.name : '');
-  const [productDescription, setProductDescription] = useState(product ? product.description : '');
-  const [price, setPrice] = useState(product ? product.price : '');
-  const [stock, setStock] = useState(product ? product.stock : '');
+  useEffect(() => {
+    getProductById(id)
+      .then(response => {
+        const productData = response.data;
+        setProduct(productData);
+        setProductName(productData.name);
+        setProductDescription(productData.description);
+        setPrice(productData.price);
+        setStock(productData.stock);
+      })
+      .catch(error => console.error("Error fetching product by ID:", error));
+  }, [id]);
 
   useEffect(() => {
     // Disable scrolling
@@ -28,14 +41,16 @@ function EditProduct({ products, updateProduct }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (product) {
-      updateProduct({
-        id: product.id,
+      updateProduct(product.productId, {
         name: productName,
         description: productDescription,
         price: price,
         stock: stock
-      });
-      navigate('/');
+      })
+      .then(() => {
+        navigate('/');
+      })
+      .catch(error => console.error("Error updating product:", error));
     }
   };
 
